@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require('../models/user');
 
 const ERROR_INCORRECT_DATA = 400;
 const ERROR_NOT_FOUND = 404;
@@ -7,9 +7,7 @@ const ERROR_DEFAULT = 500;
 const getUsers = (_req, res) => {
   User.find({}, { name: 1, about: 1, avatar: 1 })
     .then((users) => res.send(users))
-    .catch((_) =>
-      res.status(ERROR_DEFAULT).send({ message: "На сервере произошла ошибка" })
-    );
+    .catch(() => res.status(ERROR_DEFAULT).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const getUser = (req, res) => {
@@ -21,17 +19,17 @@ const getUser = (req, res) => {
       }
       res
         .status(ERROR_NOT_FOUND)
-        .send({ message: "Запрашиваемый пользователь не найден" });
+        .send({ message: 'Запрашиваемый пользователь не найден' });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         res
           .status(ERROR_INCORRECT_DATA)
-          .send({ message: "Переданы некорректные данные" });
+          .send({ message: 'Переданы некорректные данные' });
       } else {
         res
           .status(ERROR_DEFAULT)
-          .send({ message: "На сервере произошла ошибка" });
+          .send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -48,14 +46,14 @@ const createUser = (req, res) => {
       });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res
           .status(ERROR_INCORRECT_DATA)
-          .send({ message: "Переданы некорректные данные" });
+          .send({ message: 'Переданы некорректные данные' });
       } else {
         res
           .status(ERROR_DEFAULT)
-          .send({ message: "На сервере произошла ошибка" });
+          .send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -68,7 +66,7 @@ const updateUser = (req, res) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .then((user) => {
       res.send({
@@ -79,14 +77,14 @@ const updateUser = (req, res) => {
       });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res
           .status(ERROR_INCORRECT_DATA)
-          .send({ message: "Переданы некорректные данные" });
+          .send({ message: 'Переданы некорректные данные' });
       } else {
         res
           .status(ERROR_DEFAULT)
-          .send({ message: "На сервере произошла ошибка" });
+          .send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -98,7 +96,7 @@ const updateAvatar = (req, res) => {
     { avatar },
     {
       new: true,
-    }
+    },
   )
     .then((user) => {
       res.send({
@@ -109,14 +107,14 @@ const updateAvatar = (req, res) => {
       });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res
           .status(ERROR_INCORRECT_DATA)
-          .send({ message: "Переданы некорректные данные" });
+          .send({ message: 'Переданы некорректные данные' });
       } else {
         res
           .status(ERROR_DEFAULT)
-          .send({ message: "На сервере произошла ошибка" });
+          .send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
