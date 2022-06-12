@@ -8,8 +8,8 @@ const {
 const getCards = (req, res) => {
   Cards.find({}, { name: 1, about: 1, link: 1, owner: 1, likes: 1 })
     .then((cards) => res.send(cards))
-    .catch((err) =>
-      res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" })
+    .catch((_) =>
+      res.status(ERROR_DEFAULT).send({ message: "На сервере произошла ошибка" })
     );
 };
 
@@ -32,7 +32,9 @@ const createCard = (req, res) => {
           .status(ERROR_INCORRECT_DATA)
           .send({ message: "Переданы некорректные данные" });
       } else {
-        res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" });
+        res
+          .status(ERROR_DEFAULT)
+          .send({ message: "На сервере произошла ошибка" });
       }
     });
 };
@@ -48,13 +50,15 @@ const deleteCard = (req, res) => {
         .status(ERROR_NOT_FOUND)
         .send({ message: "Запрашиваемая карточка не найдена" });
     })
-    .catch((err) =>{
+    .catch((err) => {
       if (err.name === "CastError") {
         res
           .status(ERROR_INCORRECT_DATA)
           .send({ message: "Переданы некорректные данные" });
       } else {
-        res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" });
+        res
+          .status(ERROR_DEFAULT)
+          .send({ message: "На сервере произошла ошибка" });
       }
     });
 };
@@ -87,7 +91,9 @@ const likeCard = (req, res) => {
           .status(ERROR_INCORRECT_DATA)
           .send({ message: "Переданы некорректные данные" });
       } else {
-        res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" });
+        res
+          .status(ERROR_DEFAULT)
+          .send({ message: "На сервере произошла ошибка" });
       }
     });
 };
@@ -120,7 +126,9 @@ const dislikeCard = (req, res) => {
           .status(ERROR_INCORRECT_DATA)
           .send({ message: "Переданы некорректные данные" });
       } else {
-        res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" });
+        res
+          .status(ERROR_DEFAULT)
+          .send({ message: "На сервере произошла ошибка" });
       }
     });
 };

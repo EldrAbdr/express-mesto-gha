@@ -7,8 +7,8 @@ const ERROR_DEFAULT = 500;
 const getUsers = (_req, res) => {
   User.find({}, { name: 1, about: 1, avatar: 1 })
     .then((users) => res.send(users))
-    .catch((err) =>
-      res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" })
+    .catch((_) =>
+      res.status(ERROR_DEFAULT).send({ message: "На сервере произошла ошибка" })
     );
 };
 
@@ -29,7 +29,9 @@ const getUser = (req, res) => {
           .status(ERROR_INCORRECT_DATA)
           .send({ message: "Переданы некорректные данные" });
       } else {
-        res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" });
+        res
+          .status(ERROR_DEFAULT)
+          .send({ message: "На сервере произошла ошибка" });
       }
     });
 };
@@ -51,7 +53,9 @@ const createUser = (req, res) => {
           .status(ERROR_INCORRECT_DATA)
           .send({ message: "Переданы некорректные данные" });
       } else {
-        res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" });
+        res
+          .status(ERROR_DEFAULT)
+          .send({ message: "На сервере произошла ошибка" });
       }
     });
 };
@@ -80,7 +84,9 @@ const updateUser = (req, res) => {
           .status(ERROR_INCORRECT_DATA)
           .send({ message: "Переданы некорректные данные" });
       } else {
-        res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" });
+        res
+          .status(ERROR_DEFAULT)
+          .send({ message: "На сервере произошла ошибка" });
       }
     });
 };
@@ -108,7 +114,9 @@ const updateAvatar = (req, res) => {
           .status(ERROR_INCORRECT_DATA)
           .send({ message: "Переданы некорректные данные" });
       } else {
-        res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" });
+        res
+          .status(ERROR_DEFAULT)
+          .send({ message: "На сервере произошла ошибка" });
       }
     });
 };
