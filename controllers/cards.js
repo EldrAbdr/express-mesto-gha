@@ -27,7 +27,7 @@ const createCard = (req, res) => {
       });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === "ValidationError") {
         res
           .status(ERROR_INCORRECT_DATA)
           .send({ message: "Переданы некорректные данные" });
@@ -48,9 +48,15 @@ const deleteCard = (req, res) => {
         .status(ERROR_NOT_FOUND)
         .send({ message: "Запрашиваемая карточка не найдена" });
     })
-    .catch((err) =>
-      res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" })
-    );
+    .catch((err) =>{
+      if (err.name === "CastError") {
+        res
+          .status(ERROR_INCORRECT_DATA)
+          .send({ message: "Переданы некорректные данные" });
+      } else {
+        res.status(ERROR_DEFAULT).send({ message: "Произошла ошибка" });
+      }
+    });
 };
 
 const likeCard = (req, res) => {

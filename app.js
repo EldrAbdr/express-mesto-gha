@@ -18,6 +18,9 @@ app.use((req, res, next) => {
 });
 app.use('/', userRouter);
 app.use('/', cardRouter);
+app.patch('*', (_req, res) => {
+  res.status(404).send({message: "Указан не верный путь"});
+});
 
 
 app.listen(PORT, () => {
