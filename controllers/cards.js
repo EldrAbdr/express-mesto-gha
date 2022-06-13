@@ -1,9 +1,9 @@
 const Cards = require('../models/card');
 const {
-  ERROR_DEFAULT,
   ERROR_NOT_FOUND,
+  ERROR_DEFAULT,
   ERROR_INCORRECT_DATA,
-} = require('./users');
+} = require('../errors/errors');
 
 const getCards = (req, res) => {
   Cards.find({}, {
@@ -30,7 +30,7 @@ const createCard = (req, res) => {
       if (err.name === 'ValidationError') {
         res
           .status(ERROR_INCORRECT_DATA)
-          .send({ message: 'Переданы некорректные данные' });
+          .send({ message: err.message });
       } else {
         res
           .status(ERROR_DEFAULT)
@@ -54,7 +54,7 @@ const deleteCard = (req, res) => {
       if (err.name === 'CastError') {
         res
           .status(ERROR_INCORRECT_DATA)
-          .send({ message: 'Переданы некорректные данные' });
+          .send({ message: 'Не корректный id карточки' });
       } else {
         res
           .status(ERROR_DEFAULT)
@@ -89,7 +89,7 @@ const likeCard = (req, res) => {
       if (err.name === 'CastError') {
         res
           .status(ERROR_INCORRECT_DATA)
-          .send({ message: 'Переданы некорректные данные' });
+          .send({ message: 'Не корректный id карточки' });
       } else {
         res
           .status(ERROR_DEFAULT)
@@ -124,7 +124,7 @@ const dislikeCard = (req, res) => {
       if (err.name === 'CastError') {
         res
           .status(ERROR_INCORRECT_DATA)
-          .send({ message: 'Переданы некорректные данные' });
+          .send({ message: 'Не корректный id карточки' });
       } else {
         res
           .status(ERROR_DEFAULT)
