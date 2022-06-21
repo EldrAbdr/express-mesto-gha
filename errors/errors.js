@@ -1,9 +1,35 @@
-const ERROR_INCORRECT_DATA = 400;
-const ERROR_NOT_FOUND = 404;
-const ERROR_DEFAULT = 500;
+class RequestError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 400;
+  }
+}
+
+class AuthorizationError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 401;
+  }
+}
+
+class NotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 404;
+
+  }
+}
+
+class RegistrationError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 409;
+  }
+}
 
 module.exports = {
-  ERROR_INCORRECT_DATA,
-  ERROR_NOT_FOUND,
-  ERROR_DEFAULT,
+  RequestError,
+  AuthorizationError,
+  NotFoundError,
+  RegistrationError,
 };
