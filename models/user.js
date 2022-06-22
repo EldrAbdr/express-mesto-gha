@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { RequestError } = require('../errors/errors');
-const regex = /^((http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/;
-
+const {linkRegex} = require('../validation/configs');
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -32,7 +31,7 @@ const userSchema = new mongoose.Schema({
       'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
       validator: function (v) {
-        return regex.test(v);
+        return linkRegex.test(v);
       },
       message: (props) => `${props.value} некорректная ссылка`,
     },

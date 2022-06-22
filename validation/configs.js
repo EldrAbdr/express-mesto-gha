@@ -59,4 +59,5 @@ module.exports = {
   idCheckConfig,
   updateUserConfig,
   linkCheckConfig,
+  linkRegex,
 };
