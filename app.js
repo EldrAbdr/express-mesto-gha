@@ -8,7 +8,7 @@ const cardRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 const { NotFoundError } = require('./errors/errors');
-const {validateLogin, validateSignup} = require('./validation/validators');
+const { signinValidationConfig, signupValidateConfig } = require('./validation/configs');
 
 const app = express();
 
@@ -19,9 +19,9 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 
-app.post('/signup', validateSignup, createUser);
+app.post('/signup', celebrate(signupValidateConfig), createUser);
 
-app.post('/signin', validateLogin, login);
+app.post('/signin', celebrate(signinValidationConfig), login);
 
 app.use(auth);
 
