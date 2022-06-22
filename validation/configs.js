@@ -35,13 +35,13 @@ const cardDeleteConfig = {
 const cardCreateConfig = {
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().pattern(linkRegex),
+    link: Joi.string().required().pattern(linkRegex),
   }),
 };
 
 const idCheckConfig = {
   params: Joi.object().keys({
-    _id: Joi.string().length(24),
+    id: Joi.string().length(24),
   }),
 };
 

@@ -33,7 +33,7 @@ const getUser = (req, res, next) => {
 const getUserInfo = (req, res, next) => {
   User.findOne(
     { _id: mongoose.Types.ObjectId(req.user._id) },
-    { name: 1, about: 1, avatar: 1 },
+    { name: 1, about: 1, avatar: 1, email: 1 }
   )
     .then((user) => {
       if (!user) {
@@ -48,9 +48,9 @@ const createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
   User.findOne({ email })
     .then((user) => {
-      if(user) {
+      if (user) {
         throw new RegistrationError(
-          'Пользователь с такими данными уже существует',
+          'Пользователь с такими данными уже существует'
         );
       }
       bcrypt.hash(password, 10).then((hash) => {
@@ -79,7 +79,13 @@ const login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'super-secret', {
         expiresIn: '1w',
       });
-      res.cookie('jwt', token, { httpOnly: true }).end();
+      res.cookie('jwt', token, { httpOnly: true }).send({
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+      });
     })
     .catch(next);
 };
@@ -92,7 +98,7 @@ const updateUser = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    },
+    }
   )
     .then((user) => {
       if (!user) {
@@ -127,7 +133,7 @@ const updateAvatar = (req, res, next) => {
     { avatar },
     {
       new: true,
-    },
+    }
   )
     .then((user) => {
       res.send({

@@ -15,12 +15,12 @@ const {
 
 router.get('/', getCards);
 
-router.delete('/:cardId', celebrate(cardDeleteConfig), deleteCard);
+router.delete('/:id', celebrate(idCheckConfig), deleteCard);
 
 router.post('/', celebrate(cardCreateConfig), createCard);
 
-router.put('/:cardId/likes', celebrate(idCheckConfig), likeCard);
+router.put('/:id/likes', celebrate(idCheckConfig), likeCard);
 
-router.delete('/:cardId/likes', celebrate(idCheckConfig), dislikeCard);
+router.delete('/:id/likes', celebrate(idCheckConfig), dislikeCard);
 
 module.exports = router;
