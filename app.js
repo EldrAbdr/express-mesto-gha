@@ -2,13 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const { errors, celebrate, Joi } = require('celebrate');
+const { errors, celebrate } = require('celebrate');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 const { NotFoundError } = require('./errors/errors');
-const { signinConfig, signupConfig, linkRegex } = require('./validation/configs');
+const { signinConfig, signupConfig } = require('./validation/configs');
 
 const app = express();
 
@@ -17,7 +17,6 @@ const { PORT = 3000 } = process.env;
 mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use(bodyParser.json());
 app.use(cookieParser());
-
 
 app.post('/signup', celebrate(signupConfig), createUser);
 

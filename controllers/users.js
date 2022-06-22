@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 const {
   RequestError,
   RegistrationError,
@@ -9,13 +9,26 @@ const {
 } = require('../errors/errors');
 
 const getUsers = (_req, res, next) => {
-  User.find({}, { name: 1, about: 1, avatar: 1 })
+  User.find(
+    {},
+    {
+      email: 1,
+      name: 1,
+      about: 1,
+      avatar: 1,
+    },
+  )
     .then((users) => res.send(users))
     .catch(next);
 };
 
 const getUser = (req, res, next) => {
-  User.findById(req.params.id, { name: 1, about: 1, avatar: 1 })
+  User.findById(req.params.id, {
+    email: 1,
+    name: 1,
+    about: 1,
+    avatar: 1,
+  })
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Запрашиваемый пользователь не найден');
@@ -32,8 +45,15 @@ const getUser = (req, res, next) => {
 
 const getUserInfo = (req, res, next) => {
   User.findOne(
-    { _id: mongoose.Types.ObjectId(req.user._id) },
-    { name: 1, about: 1, avatar: 1, email: 1 }
+    {
+      _id: mongoose.Types.ObjectId(req.user._id),
+    },
+    {
+      name: 1,
+      about: 1,
+      avatar: 1,
+      email: 1,
+    },
   )
     .then((user) => {
       if (!user) {
@@ -45,16 +65,30 @@ const getUserInfo = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const
+    {
+      name,
+      about,
+      avatar,
+      email,
+      password,
+    } = req.body;
   User.findOne({ email })
     .then((user) => {
       if (user) {
         throw new RegistrationError(
-          'Пользователь с такими данными уже существует'
+          'Пользователь с такими данными уже существует',
         );
       }
       bcrypt.hash(password, 10).then((hash) => {
-        User.create({ name, about, avatar, email, password: hash })
+        User.create(
+          {
+            name,
+            about,
+            avatar,
+            email,
+            password: hash,
+          })
           .then((user) => {
             res.send({
               _id: user._id,
@@ -98,7 +132,7 @@ const updateUser = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .then((user) => {
       if (!user) {
@@ -133,7 +167,7 @@ const updateAvatar = (req, res, next) => {
     { avatar },
     {
       new: true,
-    }
+    },
   )
     .then((user) => {
       res.send({

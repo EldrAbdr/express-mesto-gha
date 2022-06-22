@@ -16,7 +16,6 @@ class NotFoundError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = 404;
-
   }
 }
 
@@ -27,9 +26,17 @@ class RegistrationError extends Error {
   }
 }
 
+class IllegalAccess extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 403;
+  }
+}
+
 module.exports = {
   RequestError,
   AuthorizationError,
   NotFoundError,
   RegistrationError,
+  IllegalAccess,
 };

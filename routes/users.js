@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate } = require('celebrate');
 const {
   idCheckConfig,
   updateUserConfig,
@@ -15,11 +15,8 @@ const {
 
 router.get('/', getUsers);
 router.get('/me', getUserInfo);
-
 router.get('/:id', celebrate(idCheckConfig), getUser);
-
 router.patch('/me', celebrate(updateUserConfig), updateUser);
-
 router.patch('/me/avatar', celebrate(linkCheckConfig), updateAvatar);
 
 module.exports = router;

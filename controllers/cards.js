@@ -2,6 +2,7 @@ const Cards = require('../models/card');
 const {
   NotFoundError,
   RequestError,
+  IllegalAccess,
 } = require('../errors/errors');
 
 const getCards = (req, res, next) => {
@@ -35,16 +36,16 @@ const createCard = (req, res, next) => {
 const deleteCard = (req, res, next) => {
   Cards.findById(req.params.id)
     .then((card) => {
-      if(!card) {
+      if (!card) {
         throw new NotFoundError('Запрашиваемая карточка не найдена');
       }
-      if(!(card.owner.toString() === req.user._id)) {
-        throw new RequestError('Удалить карточку может только создатель');
+      if (!(card.owner.toString() === req.user._id)) {
+        throw new IllegalAccess('Удалить карточку может только создатель');
       }
       Cards.findByIdAndDelete(req.params.id)
-        .then((card) => {
-        res.send(card);
-      });
+        .then(() => {
+          res.send(card);
+        });
     })
     .catch((err) => {
       if (err.name === 'CastError') {

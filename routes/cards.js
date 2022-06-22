@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
+const { celebrate } = require('celebrate');
 const {
-  cardDeleteConfig,
   cardCreateConfig,
   idCheckConfig,
 } = require('../validation/configs');

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { AuthorizationError } = require('../errors/errors');
 const { linkRegex } = require('../validation/configs');
+
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
