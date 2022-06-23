@@ -66,7 +66,13 @@ const createUser = (req, res, next) => {
           },
         )
           .then((newUser) => {
-            res.send(newUser);
+            res.send({
+              _id: newUser.id,
+              email: newUser.email,
+              name: newUser.name,
+              about: newUser.about,
+              avatar: newUser.avatar,
+            });
           })
           .catch((err) => {
             if (err.name === 'ValidationError') {
