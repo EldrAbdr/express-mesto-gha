@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { AuthorizationError } = require('../errors/errors');
+const AuthorizationError = require('../errors/authorization-error');
 const { linkRegex } = require('../validation/configs');
 
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: true,
+    required: [true, 'Поле "email" должно быть заполнено'],
     unique: true,
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'Поле "password" должно быть заполнено'],
     select: false,
   },
   name: {
@@ -31,15 +31,15 @@ const userSchema = new mongoose.Schema({
     default:
       'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator: function (v) {
+      function(v) {
         return linkRegex.test(v);
       },
-      message: (props) => `${props.value} некорректная ссылка`,
+      message: 'Некорректная ссылка',
     },
   },
-});
+}, { versionKey: false });
 
-userSchema.statics.findUserByCredentials = function (email, password, next) {
+userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password, next) {
   return this.findOne({ email })
     .select('+password')
     .then((user) => {

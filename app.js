@@ -2,41 +2,23 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const { errors, celebrate } = require('celebrate');
-const userRouter = require('./routes/users');
-const cardRouter = require('./routes/cards');
-const auth = require('./middlewares/auth');
-const { createUser, login } = require('./controllers/users');
-const { NotFoundError } = require('./errors/errors');
-const { signinConfig, signupConfig } = require('./validation/configs');
+const { errors } = require('celebrate');
+const helmet = require('helmet');
+const routes = require('./routes/index');
+const errorsHandler = require('./middlewares/errors-handler');
 
 const app = express();
 
 const { PORT = 3000 } = process.env;
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.post('/signup', celebrate(signupConfig), createUser);
-
-app.post('/signin', celebrate(signinConfig), login);
-
-app.use(auth);
-
-app.use('/users', userRouter);
-app.use('/cards', cardRouter);
-
-app.patch('*', (req, res, next) => {
-  next(new NotFoundError('Указан не верный путь'));
-});
+app.use(routes);
 
 app.use(errors());
-app.use((err, req, res, _next) => {
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
-  });
-});
+app.use(errorsHandler);
 
 app.listen(PORT);

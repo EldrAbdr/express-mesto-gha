@@ -1,34 +1,18 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const {
-  RequestError,
-  RegistrationError,
-  NotFoundError,
-} = require('../errors/errors');
+const NotFoundError = require('../errors/notfound-error');
+const RequestError = require('../errors/request-error');
+const RegistrationError = require('../errors/registration-error');
 
 const getUsers = (_req, res, next) => {
-  User.find(
-    {},
-    {
-      email: 1,
-      name: 1,
-      about: 1,
-      avatar: 1,
-    },
-  )
+  User.find({})
     .then((users) => res.send(users))
     .catch(next);
 };
 
 const getUser = (req, res, next) => {
-  User.findById(req.params.id, {
-    email: 1,
-    name: 1,
-    about: 1,
-    avatar: 1,
-  })
+  User.findById(req.params.id)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Запрашиваемый пользователь не найден');
@@ -38,23 +22,14 @@ const getUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new RequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
 const getUserInfo = (req, res, next) => {
-  User.findOne(
-    {
-      _id: mongoose.Types.ObjectId(req.user._id),
-    },
-    {
-      name: 1,
-      about: 1,
-      avatar: 1,
-      email: 1,
-    },
-  )
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Запрашиваемый пользователь не найден');
@@ -90,17 +65,15 @@ const createUser = (req, res, next) => {
             password: hash,
           },
         )
-          .then((user) => {
-            res.send({
-              _id: user._id,
-              email: user.email,
-              name: user.name,
-              about: user.about,
-              avatar: user.avatar,
-            });
+          .then((newUser) => {
+            res.send(newUser);
           })
           .catch((err) => {
-            next(new RequestError(err.message));
+            if (err.name === 'ValidationError') {
+              next(new RequestError('Некорректные данные при создании карточки'));
+            } else {
+              next(err);
+            }
           });
       });
     })
@@ -114,13 +87,7 @@ const login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'super-secret', {
         expiresIn: '1w',
       });
-      res.cookie('jwt', token, { httpOnly: true }).send({
-        _id: user._id,
-        email: user.email,
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-      });
+      res.cookie('jwt', token, { httpOnly: true }).send(user);
     })
     .catch(next);
 };
@@ -139,12 +106,7 @@ const updateUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Запрашиваемый пользователь не найден');
       }
-      res.send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        _id: user._id,
-      });
+      res.send(user);
     })
     .catch((err) => {
       switch (err.name) {
@@ -171,12 +133,7 @@ const updateAvatar = (req, res, next) => {
     },
   )
     .then((user) => {
-      res.send({
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        _id: user._id,
-      });
+      res.send(user);
     })
     .catch((err) => {
       switch (err.name) {

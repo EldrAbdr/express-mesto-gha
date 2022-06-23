@@ -28,7 +28,7 @@ const updateUserConfig = {
 
 const cardDeleteConfig = {
   params: Joi.object().keys({
-    _id: Joi.string().length(24),
+    _id: Joi.string().length(24).hex().required(),
   }),
 };
 
@@ -41,7 +41,7 @@ const cardCreateConfig = {
 
 const idCheckConfig = {
   params: Joi.object().keys({
-    id: Joi.string().length(24),
+    id: Joi.string().length(24).hex().required(),
   }),
 };
 

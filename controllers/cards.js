@@ -1,14 +1,10 @@
 const Cards = require('../models/card');
-const {
-  NotFoundError,
-  RequestError,
-  IllegalAccess,
-} = require('../errors/errors');
+const NotFoundError = require('../errors/notfound-error');
+const RequestError = require('../errors/request-error');
+const IllegalAccess = require('../errors/illegal-access-error');
 
 const getCards = (req, res, next) => {
-  Cards.find({}, {
-    name: 1, about: 1, link: 1, owner: 1, likes: 1,
-  })
+  Cards.find({})
     .then((cards) => res.send(cards))
     .catch(next);
 };
@@ -17,18 +13,13 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Cards.create({ name, link, owner: req.user._id })
     .then((card) => {
-      res.send({
-        name: card.name,
-        about: card.about,
-        link: card.link,
-        owner: card.owner,
-        likes: card.likes,
-        _id: card._id,
-      });
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new RequestError(err.message));
+      } else {
+        next(err);
       }
     });
 };
@@ -42,7 +33,7 @@ const deleteCard = (req, res, next) => {
       if (!(card.owner.toString() === req.user._id)) {
         throw new IllegalAccess('Удалить карточку может только создатель');
       }
-      Cards.findByIdAndDelete(req.params.id)
+      return Cards.findByIdAndDelete(req.params.id)
         .then(() => {
           res.send(card);
         });
@@ -50,8 +41,9 @@ const deleteCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new RequestError('Не корректный id карточки'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -65,20 +57,14 @@ const likeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Запрашиваемая карточка не найдена');
       }
-      res.send({
-        name: card.name,
-        about: card.about,
-        link: card.link,
-        owner: card.owner,
-        likes: card.likes,
-        _id: card._id,
-      });
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new RequestError('Не корректный id карточки'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -92,20 +78,14 @@ const dislikeCard = (req, res, next) => {
       if (!card) {
         throw new NotFoundError('Запрашиваемая карточка не найдена');
       }
-      res.send({
-        name: card.name,
-        about: card.about,
-        link: card.link,
-        owner: card.owner,
-        likes: card.likes,
-        _id: card._id,
-      });
+      res.send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new RequestError('Не корректный id карточки'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
